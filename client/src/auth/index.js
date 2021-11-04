@@ -19,12 +19,14 @@ function AuthContextProvider(props) {
     const history = useHistory();
 
     useEffect(() => {
+        console.log("useeffect called for first initialization")
         auth.getLoggedIn();
     }, []);
 
     const authReducer = (action) => {
         const { type, payload } = action;
         switch (type) {
+            //changed from GET_LOGGED_IN to SET_LOGGED_IN
             case AuthActionType.GET_LOGGED_IN: {
                 return setAuth({
                     user: payload.user,
@@ -43,6 +45,12 @@ function AuthContextProvider(props) {
     }
 
     auth.getLoggedIn = async function () {
+        console.log("getloggedin useeffect called at src/auth/index.js")
+        try {
+            const response = await api.getLoggedIn();
+        } catch (error) {
+            console.log("error in getloggedin")
+        }
         const response = await api.getLoggedIn();
         if (response.status === 200) {
             authReducer({

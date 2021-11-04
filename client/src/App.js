@@ -3,10 +3,11 @@ import { React } from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { AuthContextProvider } from './auth';
 import { GlobalStoreContextProvider } from './store'
-import LoginScreen from './components/LoginScreen';
+//import { LoginScreen } from './components/LoginScreen';
 import {
     AppBanner,
     HomeWrapper,
+    LoginScreen,
     RegisterScreen,
     Statusbar,
     WorkspaceScreen,
