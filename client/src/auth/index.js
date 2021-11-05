@@ -79,21 +79,45 @@ function AuthContextProvider(props) {
 
     auth.registerUser = async function(userData, store) {
         console.log("auth.registerUser called with", userData)
-        const response = await api.registerUser(userData);
-        console.log("response of auth.registerUser is", response)
-        if (response.status === 200) {
-            authReducer({
-                type: AuthActionType.REGISTER_USER,
-                payload: {
-                    user: response.data.user
-                }
-            })
-            history.push("/");
-            store.loadIdNamePairs();
+        try {
+            const response = await api.registerUser(userData);
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.REGISTER_USER,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                history.push("/");
+                store.loadIdNamePairs();
+            }
+        } catch (error) {
+            console.log("Register Error: ", error.response.data.errorMessage)
+            //TODO, create modals for each message
         }
     }
 
     auth.loginUser = async function(loginData, store) {
+        console.log("loginData", loginData)
+        try {
+            const response = await api.loginUser(loginData)
+            if (response.status === 200) {
+                console.log("GREAT SCOTT", response.data)
+                authReducer({
+                    type: AuthActionType.LOGIN_USER,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                history.push("/");
+                store.loadIdNamePairs();
+                
+            }
+        } catch (error) {
+            console.log("Login Error: ",error.response.data.errorMessage)
+        }
+    }
+     /*
         let isErr = false
         console.log("auth.loginUser called", loginData)
         try {
@@ -119,6 +143,7 @@ function AuthContextProvider(props) {
             console.log("Error with login, login process skipped")
         }
     }
+    */
 
     return (
         <AuthContext.Provider value={{

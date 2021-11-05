@@ -22,18 +22,20 @@ registerUser = async (req, res) => {
         if (!firstName || !lastName || !email || !password || !passwordVerify) {
             return res
                 .status(400)
-                .json({ errorMessage: "Please enter all required fields." });
+                .json({ 
+                    errorMessage: "Please enter all required fields." 
+                    });
         }
         if (password.length < 8) {
             return res
-                .status(401)
+                .status(400)
                 .json({
                     errorMessage: "Please enter a password of at least 8 characters."
                 });
         }
         if (password !== passwordVerify) {
             return res
-                .status(402)
+                .status(400)
                 .json({
                     errorMessage: "Please enter the same password twice."
                 })
@@ -41,7 +43,7 @@ registerUser = async (req, res) => {
         const existingUser = await User.findOne({ email: email });
         if (existingUser) {
             return res
-                .status(403)
+                .status(400)
                 .json({
                     success: false,
                     errorMessage: "An account with this email address already exists."
@@ -87,55 +89,63 @@ loginUser = async (req, res) => {
     //sign a jwt using site's secret and embed user id inside
     //attach token to response in http-only cookie
     //send success to user and embed necessary user info
-    try {
-        const { inputEmail, inputPassword } = req.body
-        if (!inputEmail || !inputPassword) {
-            return res
-                .status(800)
-                .json({ errorMessage: "DID NOT WORK." });
-        }
-    } catch (error) {
 
-    }
-    const { inputEmail, inputPassword } = req.body
-    
     try {
-        await User.findOne({ email: inputEmail})
-    } catch (error) {
-        return console.log("WTF")
-    }
-    
-    const existingUser = await User.findOne({ email: inputEmail})
-
-    if (existingUser) {
-        const existingUserPass = await bcrypt.compare(inputPassword, existingUser.passwordHash)
-        if (existingUserPass) {
-            //CODE TO ACCEPT PASSWORD
-            const userToken = auth.signToken(existingUser)
-            res.cookie('token', token, { httpOnly: true });
+        const {email, password} = req.body;
+        if (!email || !password) {
             return res
-                .status(200)
-                .json({
-                    success: true,
-                    token: userToken
-                })
-        } else {
-            //CODE TO REJECT PASSWORD
-            return res
-                .status(405)
-                .json({
-                    success: false,
-                    errorMessage: "Incorrect Password"
-                })
+                    .status(400)
+                    .json({
+                        errorMessage: "Please enter all required fields"
+                    })
         }
-    } else {
-        //CODE TO REJECT USERNAME
-        return res
-                .status(406).send("hello")
-                .json({
-                    success: false,
-                    errorMessage: "Email not found"
-                })
+        try {
+            let existingUser = await User.findOne({ email: email})
+            try {
+                const existingUserPassword = await bcrypt.compare(password, existingUser.passwordHash);
+
+                if (existingUserPassword) {
+
+                    //CODE TO ACCEPT PASSWORD
+                    const thisUser = new User({
+                        firstName : existingUser.firstName, 
+                        LastName: existingUser.lastName, 
+                        email: existingUser.email, 
+                        passwordHash: existingUser.passwordHash
+                    });
+                    const token = auth.signToken(thisUser);
+                    
+                    await res.cookie('token', token, { 
+                        httpOnly: true,
+                        secure: true,
+                        sameSite: "none"
+                    }).status(200).json({
+                        success: true,
+                        user: {
+                            firstName: thisUser.firstName,
+                            lastName: thisUser.lastName,
+                            email: thisUser.email
+                        }
+                    }).send()
+                }
+            } catch (error) {
+                return res
+                    .status(400)
+                    .json({
+                        errorMessage: "Incorrect Password"
+                    })
+            }
+        } catch (error) {
+            return res
+                    .status(400)
+                    .json({
+                        errorMessage: "Email not found"
+                    })
+        }
+
+    } catch (error) {
+        console.error(err);
+        res.status(500).send();
     }
 }
 
