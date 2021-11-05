@@ -23,31 +23,16 @@ const theme = createTheme();
 export default function LoginScreen() {
     const { auth } = useContext(AuthContext);
     const { store } = useContext(GlobalStoreContext)
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        console.log({
-        email: data.get('email'),
-        password: data.get('password'),
-        });
-    };
-
-  /*
+  
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        auth.registerUser({
-            firstName: formData.get('firstName'),
-            lastName: formData.get('lastName'),
+        auth.loginUser({
             email: formData.get('email'),
             password: formData.get('password'),
-            passwordVerify: formData.get('passwordVerify')
         }, store);
     };
-  */
-
+  
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>

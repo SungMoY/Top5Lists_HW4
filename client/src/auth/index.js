@@ -39,6 +39,12 @@ function AuthContextProvider(props) {
                     loggedIn: true
                 })
             }
+            case AuthActionType.LOGIN_USER: {
+                return setAuth({
+                    user: payload.user,
+                    loggedIn: true
+                })
+            }
             default:
                 return auth;
         }
@@ -46,20 +52,28 @@ function AuthContextProvider(props) {
 
     auth.getLoggedIn = async function () {
         console.log("getloggedin useeffect called at src/auth/index.js")
+        let isErr = false;
         try {
-            const response = await api.getLoggedIn();
+            await api.getLoggedIn();
         } catch (error) {
-            console.log("error in getloggedin")
+            console.log("Error in api.getLoggedIn(), Most likely bc there is no login token")
+            isErr = true;
         }
-        const response = await api.getLoggedIn();
-        if (response.status === 200) {
-            authReducer({
-                type: AuthActionType.SET_LOGGED_IN,
-                payload: {
-                    loggedIn: response.data.loggedIn,
-                    user: response.data.user
-                }
-            });
+        if (!isErr) {
+            console.log("Valid login token exists, api.getLoggedIn() is run and gets it")
+            const response = await api.getLoggedIn();
+            console.log("getLoggedIn api call response:", response)
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.GET_LOGGED_IN,
+                    payload: {
+                        loggedIn: response.data.loggedIn,
+                        user: response.data.user
+                    }
+                });
+            }
+        } else {
+            console.log("No login token, api.getLoggedIn() is skipped", auth)
         }
     }
 
@@ -76,6 +90,33 @@ function AuthContextProvider(props) {
             })
             history.push("/");
             store.loadIdNamePairs();
+        }
+    }
+
+    auth.loginUser = async function(loginData, store) {
+        let isErr = false
+        console.log("auth.loginUser called", loginData)
+        try {
+            await api.loginUser(loginData)
+        } catch (error) {
+            console.log("error in loginUser", error)
+            isErr = true;
+        }
+        if (!isErr) {
+            const response = await api.loginUser(loginData)
+            if (response.status === 200) {
+                console.log("login successful")
+                authReducer({
+                    type: AuthActionType.LOGIN_USER,
+                    payload: {
+                        user : response.data.user
+                    }
+                })
+            } else {
+                console.log("login unsuccessful")
+            }
+        } else {
+            console.log("Error with login, login process skipped")
         }
     }
 
