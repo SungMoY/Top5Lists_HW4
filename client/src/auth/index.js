@@ -25,6 +25,7 @@ function AuthContextProvider(props) {
     }, []);
 
     const authReducer = (action) => {
+        console.log("ENTERED REDUCER")
         const { type, payload } = action;
         switch (type) {
             //changed from GET_LOGGED_IN to SET_LOGGED_IN
@@ -35,6 +36,7 @@ function AuthContextProvider(props) {
                 });
             }
             case AuthActionType.REGISTER_USER: {
+                console.log("REGISTER USER SWITCH CASE")
                 return setAuth({
                     user: payload.user,
                     loggedIn: true
@@ -83,17 +85,18 @@ function AuthContextProvider(props) {
         console.log("auth.registerUser called with", userData)
         try {
             const response = await api.registerUser(userData);
-            console.log("registerUser API call went through: ", response.data)
             if (response.status === 200) {
+                console.log("registerUser API call went through: ", response.data.user)
                 authReducer({
                     type: AuthActionType.REGISTER_USER,
                     payload: {
                         user: response.data.user
                     }
                 })
-                console.log("After reducer is called: ", auth.user, auth.loggedIn)
+                console.log("after calling reducer", auth.user, auth.loggedIn)
                 history.push("/");
                 store.loadIdNamePairs();
+                auth.getLoggedIn();
             }
         } catch (error) {
             console.log("Register Error: ", error.response.data.errorMessage)
@@ -106,16 +109,16 @@ function AuthContextProvider(props) {
         try {
             const response = await api.loginUser(loginData)
             if (response.status === 200) {
-                console.log("GREAT SCOTT", response.data)
+                console.log("GREAT SCOTT", response.data.user)
                 authReducer({
                     type: AuthActionType.LOGIN_USER,
                     payload: {
                         user: response.data.user
                     }
                 })
+                console.log("After reducer is called: ", auth.user, auth.loggedIn)
                 history.push("/");
                 store.loadIdNamePairs();
-                
             }
         } catch (error) {
             console.log("Login Error: ",error.response.data.errorMessage)

@@ -94,18 +94,25 @@ loginUser = async (req, res) => {
     //sign a jwt using site's secret and embed user id inside
     //attach token to response in http-only cookie
     //send success to user and embed necessary user info
-
     try {
         const {email, password} = req.body;
         if (!email || !password) {
             return res
                     .status(400)
                     .json({
-                        errorMessage: "Please enter all required fields"
+                        errorMessage: "Handle Modal: Please enter all required fields"
                     })
         }
         try {
             let existingUser = await User.findOne({ email: email})
+            if (!existingUser) {
+                return res
+                    .status(400)
+                    .json({
+                        success: false,
+                        errorMessage: "Handle Modal: Email does not exist."
+                    })
+            }
             try {
                 const existingUserPassword = await bcrypt.compare(password, existingUser.passwordHash);
 
@@ -127,9 +134,9 @@ loginUser = async (req, res) => {
                     }).status(200).json({
                         success: true,
                         user: {
-                            firstName: thisUser.firstName,
-                            lastName: thisUser.lastName,
-                            email: thisUser.email
+                            firstName: existingUser.firstName,
+                            lastName: existingUser.lastName,
+                            email: existingUser.email
                         }
                     }).send()
                 }
@@ -137,14 +144,14 @@ loginUser = async (req, res) => {
                 return res
                     .status(400)
                     .json({
-                        errorMessage: "Incorrect Password"
+                        errorMessage: "Handle Modal: Incorrect Password"
                     })
             }
         } catch (error) {
             return res
                     .status(400)
                     .json({
-                        errorMessage: "Email not found"
+                        errorMessage: "Handle Modal: Email does not exist"
                     })
         }
 
