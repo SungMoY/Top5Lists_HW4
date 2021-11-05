@@ -5,12 +5,10 @@ const jwt = require("jsonwebtoken")
 //if there is no token, just stop the call and return nothing. This can be caught here or in client/src/auth/index.js/auth.getLoggedIn
 
 function authManager() {
-    console.log("AUTHMANAGER IN SERVER/AUTH/INDEX CALLEd")
     verify = function (req, res, next) {
         try {
             const token = req.cookies.token;
             console.log(req.cookies.token)
-            
             if (!token) {
                 return res.status(401).json({
                     loggedIn: false,
@@ -18,10 +16,8 @@ function authManager() {
                     errorMessage: "Unauthorized"
                 })
             }
-            
             const verified = jwt.verify(token, process.env.JWT_SECRET)
             req.userId = verified.userId;
-
             next();
         } catch (err) {
             console.error(err);

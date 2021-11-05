@@ -8,7 +8,8 @@ console.log("create AuthContext: " + AuthContext);
 // THESE ARE ALL THE TYPES OF UPDATES TO OUR AUTH STATE THAT CAN BE PROCESSED
 export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
-    REGISTER_USER: "REGISTER_USER"
+    REGISTER_USER: "REGISTER_USER",
+    LOGIN_USER: "LOGIN_USER"
 }
 
 function AuthContextProvider(props) {
@@ -54,7 +55,8 @@ function AuthContextProvider(props) {
         console.log("getloggedin useeffect called at src/auth/index.js")
         let isErr = false;
         try {
-            await api.getLoggedIn();
+            const response = await api.getLoggedIn();
+            console.log("getLoggedIn response data: ", response.data)
         } catch (error) {
             console.log("Error in api.getLoggedIn(), Most likely bc there is no login token")
             isErr = true;
@@ -76,11 +78,12 @@ function AuthContextProvider(props) {
             console.log("No login token, api.getLoggedIn() is skipped", auth)
         }
     }
-
+    
     auth.registerUser = async function(userData, store) {
         console.log("auth.registerUser called with", userData)
         try {
             const response = await api.registerUser(userData);
+            console.log("registerUser API call went through: ", response.data)
             if (response.status === 200) {
                 authReducer({
                     type: AuthActionType.REGISTER_USER,
@@ -88,6 +91,7 @@ function AuthContextProvider(props) {
                         user: response.data.user
                     }
                 })
+                console.log("After reducer is called: ", auth.user, auth.loggedIn)
                 history.push("/");
                 store.loadIdNamePairs();
             }
@@ -98,7 +102,7 @@ function AuthContextProvider(props) {
     }
 
     auth.loginUser = async function(loginData, store) {
-        console.log("loginData", loginData)
+        console.log("auth.loginData called with", loginData)
         try {
             const response = await api.loginUser(loginData)
             if (response.status === 200) {
@@ -115,35 +119,9 @@ function AuthContextProvider(props) {
             }
         } catch (error) {
             console.log("Login Error: ",error.response.data.errorMessage)
+            //TODO, create modals for each message
         }
     }
-     /*
-        let isErr = false
-        console.log("auth.loginUser called", loginData)
-        try {
-            await api.loginUser(loginData)
-        } catch (error) {
-            console.log("error in loginUser", error)
-            isErr = true;
-        }
-        if (!isErr) {
-            const response = await api.loginUser(loginData)
-            if (response.status === 200) {
-                console.log("login successful")
-                authReducer({
-                    type: AuthActionType.LOGIN_USER,
-                    payload: {
-                        user : response.data.user
-                    }
-                })
-            } else {
-                console.log("login unsuccessful")
-            }
-        } else {
-            console.log("Error with login, login process skipped")
-        }
-    }
-    */
 
     return (
         <AuthContext.Provider value={{
