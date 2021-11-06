@@ -9,7 +9,8 @@ console.log("create AuthContext: " + AuthContext);
 export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     REGISTER_USER: "REGISTER_USER",
-    LOGIN_USER: "LOGIN_USER"
+    LOGIN_USER: "LOGIN_USER",
+    LOGOUT_USER: "LOGOUT_USER"
 }
 
 function AuthContextProvider(props) {
@@ -46,6 +47,12 @@ function AuthContextProvider(props) {
                 return setAuth({
                     user: payload.user,
                     loggedIn: true
+                })
+            }
+            case AuthActionType.LOGOUT_USER: {
+                return setAuth({
+                    user: null,
+                    loggedIn: false
                 })
             }
             default:
@@ -121,6 +128,27 @@ function AuthContextProvider(props) {
             }
         } catch (error) {
             console.log("Login Error: ",error.response.data.errorMessage)
+            //TODO, create modals for each message
+        }
+    }
+
+    auth.logoutUser = async function(store) {
+        try {
+            const response = await api.logoutUser()
+            if (response.status === 200) {
+                console.log("cookie cleared, go to reducer")
+                authReducer({
+                    type: AuthActionType.LOGOUT_USER,
+                    payload: {
+                        user : null,
+                        loggedIn : false
+                    }
+                })
+                history.push("/");
+                store.loadIdNamePairs();
+            }
+        } catch (error) {
+            console.log("Logout Error: ",error)
             //TODO, create modals for each message
         }
     }

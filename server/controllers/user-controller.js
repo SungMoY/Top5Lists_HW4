@@ -161,8 +161,17 @@ loginUser = async (req, res) => {
     }
 }
 
+logoutUser = async (req, res) => {
+    //await res.clearCookie("token").status(200).json({ success: true, errorMessage: "logout failed" })
+    //await res.cookie("token", "", {maxAge: 1}).send()
+    //res.clearCookie("token").status(200).json({ success: true })
+    console.log("logout test")
+    await res.clearCookie("token").status(200).json({ success: true })
+}
+
 module.exports = {
     getLoggedIn,
     registerUser,
-    loginUser
+    loginUser,
+    logoutUser
 }
