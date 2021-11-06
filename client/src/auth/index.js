@@ -96,7 +96,6 @@ function AuthContextProvider(props) {
                 console.log("after calling reducer", auth.user, auth.loggedIn)
                 history.push("/");
                 store.loadIdNamePairs();
-                auth.getLoggedIn();
             }
         } catch (error) {
             console.log("Register Error: ", error.response.data.errorMessage)
@@ -109,7 +108,7 @@ function AuthContextProvider(props) {
         try {
             const response = await api.loginUser(loginData)
             if (response.status === 200) {
-                console.log("GREAT SCOTT", response.data.user)
+                console.log("api.loginUser successful, returns: ", response.data.user)
                 authReducer({
                     type: AuthActionType.LOGIN_USER,
                     payload: {
