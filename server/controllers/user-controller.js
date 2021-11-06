@@ -28,21 +28,24 @@ registerUser = async (req, res) => {
             return res
                 .status(400)
                 .json({ 
-                    errorMessage: "Please enter all required fields." 
+                    errorMessage: "Please enter all required fields." ,
+                    errorCode: 1
                     });
         }
         if (password.length < 8) {
             return res
                 .status(400)
                 .json({
-                    errorMessage: "Please enter a password of at least 8 characters."
+                    errorMessage: "Please enter a password of at least 8 characters.",
+                    errorCode: 2
                 });
         }
         if (password !== passwordVerify) {
             return res
                 .status(400)
                 .json({
-                    errorMessage: "Please enter the same password twice."
+                    errorMessage: "Please enter the same password twice.",
+                    errorCode: 3
                 })
         }
         const existingUser = await User.findOne({ email: email });
@@ -51,7 +54,8 @@ registerUser = async (req, res) => {
                 .status(400)
                 .json({
                     success: false,
-                    errorMessage: "An account with this email address already exists."
+                    errorMessage: "An account with this email address already exists.",
+                    errorCode: 4
                 })
         }
 
@@ -100,7 +104,8 @@ loginUser = async (req, res) => {
             return res
                     .status(400)
                     .json({
-                        errorMessage: "Handle Modal: Please enter all required fields"
+                        errorMessage: "Handle Modal: Please enter all required fields",
+                        errorCode: 1
                     })
         }
         try {
@@ -110,7 +115,8 @@ loginUser = async (req, res) => {
                     .status(400)
                     .json({
                         success: false,
-                        errorMessage: "Handle Modal: Email does not exist."
+                        errorMessage: "Handle Modal: Email does not exist.",
+                        errorCode: 5
                     })
             }
             try {
@@ -139,19 +145,28 @@ loginUser = async (req, res) => {
                             email: existingUser.email
                         }
                     }).send()
+                } else {
+                    return res
+                    .status(400)
+                    .json({
+                        errorMessage: "Handle Modal: Incorrect Password",
+                        errorCode: 5
+                    })
                 }
             } catch (error) {
                 return res
                     .status(400)
                     .json({
-                        errorMessage: "Handle Modal: Incorrect Password"
+                        errorMessage: "Handle Modal: Incorrect Password",
+                        errorCode: 5
                     })
             }
         } catch (error) {
             return res
                     .status(400)
                     .json({
-                        errorMessage: "Handle Modal: Email does not exist"
+                        errorMessage: "Handle Modal: Email does not exist",
+                        errorCode: 99
                     })
         }
 
@@ -162,10 +177,6 @@ loginUser = async (req, res) => {
 }
 
 logoutUser = async (req, res) => {
-    //await res.clearCookie("token").status(200).json({ success: true, errorMessage: "logout failed" })
-    //await res.cookie("token", "", {maxAge: 1}).send()
-    //res.clearCookie("token").status(200).json({ success: true })
-    console.log("logout test")
     await res.clearCookie("token").status(200).json({ success: true })
 }
 

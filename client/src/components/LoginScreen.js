@@ -16,6 +16,8 @@ import Copyright from './Copyright';
 import { useContext } from 'react';
 import AuthContext from '../auth'
 import { GlobalStoreContext } from '../store'
+import RegisterModal from './RegisterModal';
+
 
 const theme = createTheme();
     
@@ -36,6 +38,7 @@ export default function LoginScreen() {
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
+      <RegisterModal />
         <CssBaseline />
         <Grid
           item

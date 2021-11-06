@@ -10,13 +10,15 @@ export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     REGISTER_USER: "REGISTER_USER",
     LOGIN_USER: "LOGIN_USER",
-    LOGOUT_USER: "LOGOUT_USER"
+    LOGOUT_USER: "LOGOUT_USER",
+    REGISTER_ERROR: "REGISTER_ERROR"
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
-        loggedIn: false
+        loggedIn: false,
+        registerErrorCode: 0
     });
     const history = useHistory();
 
@@ -33,31 +35,51 @@ function AuthContextProvider(props) {
             case AuthActionType.GET_LOGGED_IN: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: payload.loggedIn
+                    loggedIn: payload.loggedIn,
+                    registerErrorCode: 0
                 });
             }
             case AuthActionType.REGISTER_USER: {
                 console.log("REGISTER USER SWITCH CASE")
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    registerErrorCode: 0
                 })
             }
             case AuthActionType.LOGIN_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    registerErrorCode: 0
                 })
             }
             case AuthActionType.LOGOUT_USER: {
                 return setAuth({
                     user: null,
-                    loggedIn: false
+                    loggedIn: false,
+                    registerErrorCode: 0
+                })
+            }
+            case AuthActionType.REGISTER_ERROR: {
+                return setAuth({
+                    user: auth.user,
+                    loggedIn: auth.loggedIn,
+                    registerErrorCode: payload.errorCode
                 })
             }
             default:
                 return auth;
         }
+    }
+
+    auth.registerCodeReset = async function () {
+        authReducer({
+            type: AuthActionType.REGISTER_ERROR,
+            payload: {
+                registerErrorCode : 0
+            }
+        })
     }
 
     auth.getLoggedIn = async function () {
@@ -100,13 +122,21 @@ function AuthContextProvider(props) {
                         user: response.data.user
                     }
                 })
-                console.log("after calling reducer", auth.user, auth.loggedIn)
+                console.log("after calling reducer", auth.user, auth.loggedIn, auth.registerErrorCode)
                 history.push("/");
                 store.loadIdNamePairs();
             }
         } catch (error) {
             console.log("Register Error: ", error.response.data.errorMessage)
+            console.log("Register Error: ", error.response.data.errorCode)
             //TODO, create modals for each message
+            authReducer({
+                type: AuthActionType.REGISTER_ERROR,
+                payload: {
+                    errorCode : error.response.data.errorCode
+                }
+            })
+            console.log("after calling reducer", auth.user, auth.loggedIn, auth.registerErrorCode)
         }
     }
 
@@ -127,8 +157,17 @@ function AuthContextProvider(props) {
                 store.loadIdNamePairs();
             }
         } catch (error) {
-            console.log("Login Error: ",error.response.data.errorMessage)
+            //console.log("Login Error: ", error.response.data.errorMessage)
+            //console.log("Login Error: ", error.response.data.errorCode)
             //TODO, create modals for each message
+            if (error.response) {
+                authReducer({
+                    type: AuthActionType.REGISTER_ERROR,
+                    payload: {
+                        errorCode : error.response.data.errorCode
+                    }
+                })
+            }
         }
     }
 
@@ -145,10 +184,10 @@ function AuthContextProvider(props) {
                     }
                 })
                 history.push("/");
-                store.loadIdNamePairs();
+                //store.loadIdNamePairs();
             }
         } catch (error) {
-            console.log("Logout Error: ",error)
+            console.log("Logout Error: ", error)
             //TODO, create modals for each message
         }
     }

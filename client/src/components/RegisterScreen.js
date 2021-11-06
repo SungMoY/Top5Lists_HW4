@@ -12,6 +12,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { GlobalStoreContext } from '../store'
+import RegisterModal from './RegisterModal';
 
 export default function RegisterScreen() {
     const { auth } = useContext(AuthContext);
@@ -30,8 +31,10 @@ export default function RegisterScreen() {
         }, store);
     };
 
+    console.log("IN REGISTER SCREEN COMPONENT, AUTH IS:", auth.registerErrorCode)
     return (
             <Container component="main" maxWidth="xs">
+                <RegisterModal />
                 <CssBaseline />
                 <Box
                     sx={{
