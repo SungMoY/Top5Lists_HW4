@@ -229,14 +229,26 @@ function GlobalStoreContextProvider(props) {
     }
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
+    // added payload: the user's email
     store.loadIdNamePairs = async function () {
         const response = await api.getTop5ListPairs();
         if (response.data.success) {
             let pairsArray = response.data.idNamePairs;
+
+            console.log("PAIRSARRAY: ", pairsArray)
+            console.log("CHECKING EMAIL IN STORE>LOADIDNAMEPAIRS", auth.user.email)
+
+            let selectedPairsArray = pairsArray.filter(function (pair) {
+                console.log("CURRENTPAIR EMAIL: ",pair.email)
+                return pair.email === auth.user.email
+
+            })
+            console.log("SELECTEDPAIRSARRAY: ", selectedPairsArray)
             storeReducer({
                 type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
-                payload: pairsArray
+                payload: selectedPairsArray
             });
+
         }
         else {
             console.log("API FAILED TO GET THE LIST PAIRS");

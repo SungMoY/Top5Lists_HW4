@@ -108,6 +108,7 @@ getTop5Lists = async (req, res) => {
         return res.status(200).json({ success: true, data: top5Lists })
     }).catch(err => console.log(err))
 }
+
 getTop5ListPairs = async (req, res) => {
     await Top5List.find({ }, (err, top5Lists) => {
         if (err) {
@@ -126,7 +127,8 @@ getTop5ListPairs = async (req, res) => {
                 let list = top5Lists[key];
                 let pair = {
                     _id: list._id,
-                    name: list.name
+                    name: list.name,
+                    email: list.ownerEmail
                 };
                 pairs.push(pair);
             }
