@@ -36,7 +36,7 @@ updateTop5List = async (req, res) => {
     const body = req.body
     console.log("updateTop5List: " + JSON.stringify(body));
     if (!body) {
-        return res.status(400).json({
+        return res.status(402).json({ 
             success: false,
             error: 'You must provide a body to update',
         })
@@ -64,7 +64,9 @@ updateTop5List = async (req, res) => {
                 })
             })
             .catch(error => {
-                console.log("FAILURE: " + JSON.stringify(error));
+                //console.log("FAILURE: " + JSON.stringify(error));
+                console.log("FAILURE of name:", top5List.name)
+                console.log("FAILURE of items:", top5List.items)
                 return res.status(404).json({
                     error,
                     message: 'Top 5 List not updated!',
@@ -102,7 +104,7 @@ getTop5Lists = async (req, res) => {
         }
         if (!top5Lists.length) {
             return res
-                .status(404)
+                .status(407)    //was 404
                 .json({ success: false, error: `Top 5 Lists not found` })
         }
         return res.status(200).json({ success: true, data: top5Lists })
@@ -117,7 +119,7 @@ getTop5ListPairs = async (req, res) => {
         if (!top5Lists) {
             console.log("!top5Lists.length");
             return res
-                .status(404)
+                .status(408)    //was 404
                 .json({ success: false, error: 'Top 5 Lists not found' })
         }
         else {

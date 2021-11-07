@@ -175,10 +175,18 @@ function GlobalStoreContextProvider(props) {
                         response = await api.getTop5ListPairs();
                         if (response.data.success) {
                             let pairsArray = response.data.idNamePairs;
+
+                            //filter lists to show only current user's lists
+                            let selectedPairsArray = pairsArray.filter(function (pair) {
+                                console.log("CURRENTPAIR EMAIL: ",pair.email)
+                                return pair.email === auth.user.email
+                
+                            })
+
                             storeReducer({
                                 type: GlobalStoreActionType.CHANGE_LIST_NAME,
                                 payload: {
-                                    idNamePairs: pairsArray,
+                                    idNamePairs: selectedPairsArray,
                                     top5List: top5List
                                 }
                             });
@@ -319,6 +327,8 @@ function GlobalStoreContextProvider(props) {
 
     store.addUpdateItemTransaction = function (index, newText) {
         let oldText = store.currentList.items[index];
+        console.log("old text: ", oldText)
+        console.log("New Text: ", newText)
         let transaction = new UpdateItem_Transaction(store, index, oldText, newText);
         tps.addTransaction(transaction);
     }
@@ -346,11 +356,13 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.updateItem = function (index, newItem) {
+        console.log("UPDATE ITEM FUNCTION:", index, newItem)
         store.currentList.items[index] = newItem;
         store.updateCurrentList();
     }
-
+    
     store.updateCurrentList = async function () {
+        console.log(store.currentList._id, store.currentList)
         const response = await api.updateTop5ListById(store.currentList._id, store.currentList);
         if (response.data.success) {
             storeReducer({
@@ -359,6 +371,7 @@ function GlobalStoreContextProvider(props) {
             });
         }
     }
+    
 
     store.undo = function () {
         tps.undoTransaction();
