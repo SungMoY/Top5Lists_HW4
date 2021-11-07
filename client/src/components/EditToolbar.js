@@ -31,6 +31,7 @@ function EditToolbar() {
     //let redoBool = true;
     let undoBool = !store.canUndo();
     let redoBool = !store.canRedo();
+    
     return (
         <div id="edit-toolbar">
             <Button 

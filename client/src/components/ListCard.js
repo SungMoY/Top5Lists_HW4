@@ -17,8 +17,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [editActive, setEditActive] = useState(false);
-    const [text, setText] = useState("");
     const { idNamePair } = props;
+    const [text, setText] = useState(idNamePair.name);
 
     function handleLoadList(event, id) {
         if (!event.target.disabled) {
@@ -33,6 +33,18 @@ function ListCard(props) {
     }
 
     function toggleEdit() {
+        console.log(text)
+
+        if (text === undefined || text === "" || text.length === 0 ) {
+            console.log("text was undefined, changing it to:", idNamePair.name)
+            setText(idNamePair.name)
+            setText(idNamePair.name)
+            setText(idNamePair.name)
+            setText(idNamePair.name)
+            console.log("text is now: ", text)
+            console.log("text is now: ", text)
+        }
+
         let newActive = !editActive;
         if (newActive) {
             store.setIsListNameEditActive();
@@ -50,12 +62,6 @@ function ListCard(props) {
             let id = event.target.id.substring("list-".length);
             console.log("TEXT VALUES: ", text, idNamePair.name)
             //This if statement is required when editing a list name after editing a previous one. Reseting 'text' value to compare onChange text with
-            if (text === undefined || text === "") {
-                console.log("text was undefined")
-                setText(idNamePair.name)
-                console.log("text is now: ", text)
-                console.log("text is now: ", text)
-            }
             if (text !== idNamePair.name) {
                 store.changeListName(id, text);
                 toggleEdit();
@@ -106,7 +112,7 @@ function ListCard(props) {
                 required
                 fullWidth
                 id={"list-" + idNamePair._id}
-                label="Top 5 List Name"
+                label=""
                 name="name"
                 autoComplete="Top 5 List Name"
                 className='list-card'

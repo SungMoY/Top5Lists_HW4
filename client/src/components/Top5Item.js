@@ -101,7 +101,7 @@ function Top5Item(props) {
                 id={'item-' + (index+1)}
                 className='top5-item'
             >
-                <TextField id={'item-' + (index)} label={props.text} variant="outlined" onKeyPress={handleKeyPress} autoFocus defaultValue={props.text} onBlur={handleOnBlur} />
+                <TextField id={'item-' + (index)} label="" variant="outlined" onKeyPress={handleKeyPress} autoFocus defaultValue={props.text} onBlur={handleOnBlur} autoHightlight />
             </ListItem>
         )
     } else {
