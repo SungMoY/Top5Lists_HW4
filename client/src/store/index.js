@@ -321,16 +321,21 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.addMoveItemTransaction = function (start, end) {
-        let transaction = new MoveItem_Transaction(store, start, end);
-        tps.addTransaction(transaction);
+        console.log("MOVE ITEM INDICES: ", start, end)
+        if (start != end) {
+            let transaction = new MoveItem_Transaction(store, start, end);
+            tps.addTransaction(transaction);
+        }
     }
 
     store.addUpdateItemTransaction = function (index, newText) {
         let oldText = store.currentList.items[index];
         console.log("old text: ", oldText)
         console.log("New Text: ", newText)
-        let transaction = new UpdateItem_Transaction(store, index, oldText, newText);
-        tps.addTransaction(transaction);
+        if (oldText !== newText) {
+            let transaction = new UpdateItem_Transaction(store, index, oldText, newText);
+            tps.addTransaction(transaction);
+        }
     }
 
     store.moveItem = function (start, end) {

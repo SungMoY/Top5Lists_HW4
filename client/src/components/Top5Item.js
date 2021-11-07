@@ -65,7 +65,6 @@ function Top5Item(props) {
 
     function handleOnBlur(event) {
         event.stopPropagation();
-        
         let index = event.target.id.substring('item-'.length);
             let text = event.target.value;
             if (text === "") {
