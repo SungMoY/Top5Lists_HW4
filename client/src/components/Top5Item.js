@@ -63,6 +63,19 @@ function Top5Item(props) {
         }
     }
 
+    function handleOnBlur(event) {
+        event.stopPropagation();
+        
+        let index = event.target.id.substring('item-'.length);
+            let text = event.target.value;
+            if (text === "") {
+                text = "?"
+            }
+            console.log("handle key press: ", index, text)
+            store.addUpdateItemTransaction(index, text);
+            toggleEdit();
+    }
+
     function handleToggleEdit(event) {
         event.stopPropagation();
         toggleEdit();
@@ -89,7 +102,7 @@ function Top5Item(props) {
                 id={'item-' + (index+1)}
                 className='top5-item'
             >
-                <TextField id={'item-' + (index)} label={props.text} variant="outlined" onKeyPress={handleKeyPress} />
+                <TextField id={'item-' + (index)} label={props.text} variant="outlined" onKeyPress={handleKeyPress} autoFocus defaultValue={props.text} onBlur={handleOnBlur} />
             </ListItem>
         )
     } else {
