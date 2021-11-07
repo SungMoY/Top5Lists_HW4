@@ -33,16 +33,16 @@ function ListCard(props) {
     }
 
     function toggleEdit() {
-        console.log(text)
+        //console.log(text)
 
         if (text === undefined || text === "" || text.length === 0 ) {
-            console.log("text was undefined, changing it to:", idNamePair.name)
+            //console.log("text was undefined, changing it to:", idNamePair.name)
             setText(idNamePair.name)
             setText(idNamePair.name)
             setText(idNamePair.name)
             setText(idNamePair.name)
-            console.log("text is now: ", text)
-            console.log("text is now: ", text)
+            //console.log("text is now: ", text)
+            //console.log("text is now: ", text)
         }
 
         let newActive = !editActive;
@@ -60,7 +60,7 @@ function ListCard(props) {
     function handleKeyPress(event) {
         if (event.code === "Enter") {
             let id = event.target.id.substring("list-".length);
-            console.log("TEXT VALUES: ", text, idNamePair.name)
+            //console.log("TEXT VALUES: ", text, idNamePair.name)
             //This if statement is required when editing a list name after editing a previous one. Reseting 'text' value to compare onChange text with
             if (text !== idNamePair.name) {
                 store.changeListName(id, text);
@@ -71,7 +71,7 @@ function ListCard(props) {
         }
     }
     function handleUpdateText(event) {
-        console.log("EVENT TARGET:", event.target.value)
+        //console.log("EVENT TARGET:", event.target.value)
         setText(event.target.value);
     }
 

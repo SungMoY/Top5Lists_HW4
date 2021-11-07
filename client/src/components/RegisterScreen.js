@@ -31,7 +31,7 @@ export default function RegisterScreen() {
         }, store);
     };
 
-    console.log("IN REGISTER SCREEN COMPONENT, AUTH IS:", auth.registerErrorCode)
+    //console.log("IN REGISTER SCREEN COMPONENT, AUTH IS:", auth.registerErrorCode)
     return (
             <Container component="main" maxWidth="xs">
                 <RegisterModal />

@@ -181,7 +181,7 @@ function GlobalStoreContextProvider(props) {
 
                             //filter lists to show only current user's lists
                             let selectedPairsArray = pairsArray.filter(function (pair) {
-                                console.log("CURRENTPAIR EMAIL: ",pair.email)
+                                //console.log("CURRENTPAIR EMAIL: ",pair.email)
                                 return pair.email === auth.user.email
                 
                             })
@@ -246,15 +246,15 @@ function GlobalStoreContextProvider(props) {
         if (response.data.success) {
             let pairsArray = response.data.idNamePairs;
 
-            console.log("PAIRSARRAY: ", pairsArray)
-            console.log("CHECKING EMAIL IN STORE>LOADIDNAMEPAIRS", auth.user.email)
+            //console.log("PAIRSARRAY: ", pairsArray)
+            //console.log("CHECKING EMAIL IN STORE>LOADIDNAMEPAIRS", auth.user.email)
 
             let selectedPairsArray = pairsArray.filter(function (pair) {
-                console.log("CURRENTPAIR EMAIL: ",pair.email)
+                //console.log("CURRENTPAIR EMAIL: ",pair.email)
                 return pair.email === auth.user.email
 
             })
-            console.log("SELECTEDPAIRSARRAY: ", selectedPairsArray)
+            //console.log("SELECTEDPAIRSARRAY: ", selectedPairsArray)
             storeReducer({
                 type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
                 payload: selectedPairsArray
@@ -272,9 +272,9 @@ function GlobalStoreContextProvider(props) {
     // showDeleteListModal, and hideDeleteListModal
     store.markListForDeletion = async function (id) {
         // GET THE LIST
-        console.log("MARKLISTFORDELETION ID:", id)
+        //console.log("MARKLISTFORDELETION ID:", id)
         let response = await api.getTop5ListById(id);
-        console.log("response.data.top5List", response.data.top5List)
+        //console.log("response.data.top5List", response.data.top5List)
         if (response.data.success) {
             let top5List = response.data.top5List;
             storeReducer({
@@ -324,7 +324,7 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.addMoveItemTransaction = function (start, end) {
-        console.log("MOVE ITEM INDICES: ", start, end)
+        //("MOVE ITEM INDICES: ", start, end)
         if (start != end) {
             let transaction = new MoveItem_Transaction(store, start, end);
             tps.addTransaction(transaction);
@@ -333,8 +333,8 @@ function GlobalStoreContextProvider(props) {
 
     store.addUpdateItemTransaction = function (index, newText) {
         let oldText = store.currentList.items[index];
-        console.log("old text: ", oldText)
-        console.log("New Text: ", newText)
+        //console.log("old text: ", oldText)
+        //console.log("New Text: ", newText)
         if (oldText !== newText) {
             let transaction = new UpdateItem_Transaction(store, index, oldText, newText);
             tps.addTransaction(transaction);
@@ -364,13 +364,13 @@ function GlobalStoreContextProvider(props) {
     }
 
     store.updateItem = function (index, newItem) {
-        console.log("UPDATE ITEM FUNCTION:", index, newItem)
+        //console.log("UPDATE ITEM FUNCTION:", index, newItem)
         store.currentList.items[index] = newItem;
         store.updateCurrentList();
     }
     
     store.updateCurrentList = async function () {
-        console.log(store.currentList._id, store.currentList)
+        //console.log(store.currentList._id, store.currentList)
         const response = await api.updateTop5ListById(store.currentList._id, store.currentList);
         if (response.data.success) {
             storeReducer({

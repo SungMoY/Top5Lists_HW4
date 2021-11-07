@@ -31,7 +31,7 @@ export default function DeleteModal() {
         openBool = true
         name = store.listMarkedForDeletion.name
     }
-    console.log("IS A LIST MARKED FOR DELETION", openBool)
+    //console.log("IS A LIST MARKED FOR DELETION", openBool)
 
     function handleDeleteList(event) {
         store.deleteMarkedList();

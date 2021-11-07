@@ -27,7 +27,7 @@ export default function RegisterModal() {
     if (auth.registerErrorCode > 0) {
         openBool = true
     }
-    console.log("ERROR CODE", auth.registerErrorCode)
+    //("ERROR CODE", auth.registerErrorCode)
 
     switch (auth.registerErrorCode) {
         case 1: {

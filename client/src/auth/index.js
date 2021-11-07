@@ -23,12 +23,12 @@ function AuthContextProvider(props) {
     const history = useHistory();
 
     useEffect(() => {
-        console.log("useeffect called for first initialization")
+        //console.log("useeffect called for first initialization")
         auth.getLoggedIn();
     }, []);
 
     const authReducer = (action) => {
-        console.log("ENTERED REDUCER")
+        //console.log("ENTERED REDUCER")
         const { type, payload } = action;
         switch (type) {
             //changed from GET_LOGGED_IN to SET_LOGGED_IN
@@ -40,7 +40,7 @@ function AuthContextProvider(props) {
                 });
             }
             case AuthActionType.REGISTER_USER: {
-                console.log("REGISTER USER SWITCH CASE")
+                //console.log("REGISTER USER SWITCH CASE")
                 return setAuth({
                     user: payload.user,
                     loggedIn: true,
@@ -83,19 +83,19 @@ function AuthContextProvider(props) {
     }
 
     auth.getLoggedIn = async function () {
-        console.log("getloggedin useeffect called at src/auth/index.js")
+        //console.log("getloggedin useeffect called at src/auth/index.js")
         let isErr = false;
         try {
             const response = await api.getLoggedIn();
-            console.log("getLoggedIn response data: ", response.data)
+            //console.log("getLoggedIn response data: ", response.data)
         } catch (error) {
-            console.log("Error in api.getLoggedIn(), Most likely bc there is no login token")
+            //console.log("Error in api.getLoggedIn(), Most likely bc there is no login token")
             isErr = true;
         }
         if (!isErr) {
-            console.log("Valid login token exists, api.getLoggedIn() is run and gets it")
+            //console.log("Valid login token exists, api.getLoggedIn() is run and gets it")
             const response = await api.getLoggedIn();
-            console.log("getLoggedIn api call response:", response)
+            //console.log("getLoggedIn api call response:", response)
             if (response.status === 200) {
                 authReducer({
                     type: AuthActionType.GET_LOGGED_IN,
@@ -106,29 +106,29 @@ function AuthContextProvider(props) {
                 });
             }
         } else {
-            console.log("No login token, api.getLoggedIn() is skipped", auth)
+            //console.log("No login token, api.getLoggedIn() is skipped", auth)
         }
     }
     
     auth.registerUser = async function(userData, store) {
-        console.log("auth.registerUser called with", userData)
+        //console.log("auth.registerUser called with", userData)
         try {
             const response = await api.registerUser(userData);
             if (response.status === 200) {
-                console.log("registerUser API call went through: ", response.data.user)
+                //console.log("registerUser API call went through: ", response.data.user)
                 authReducer({
                     type: AuthActionType.REGISTER_USER,
                     payload: {
                         user: response.data.user
                     }
                 })
-                console.log("after calling reducer", auth.user, auth.loggedIn, auth.registerErrorCode)
+                //console.log("after calling reducer", auth.user, auth.loggedIn, auth.registerErrorCode)
                 history.push("/");
                 store.loadIdNamePairs();
             }
         } catch (error) {
-            console.log("Register Error: ", error.response.data.errorMessage)
-            console.log("Register Error: ", error.response.data.errorCode)
+            //console.log("Register Error: ", error.response.data.errorMessage)
+            //console.log("Register Error: ", error.response.data.errorCode)
             //TODO, create modals for each message
             authReducer({
                 type: AuthActionType.REGISTER_ERROR,
@@ -136,23 +136,23 @@ function AuthContextProvider(props) {
                     errorCode : error.response.data.errorCode
                 }
             })
-            console.log("after calling reducer", auth.user, auth.loggedIn, auth.registerErrorCode)
+            //console.log("after calling reducer", auth.user, auth.loggedIn, auth.registerErrorCode)
         }
     }
 
     auth.loginUser = async function(loginData, store) {
-        console.log("auth.loginData called with", loginData)
+        //console.log("auth.loginData called with", loginData)
         try {
             const response = await api.loginUser(loginData)
             if (response.status === 200) {
-                console.log("api.loginUser successful, returns: ", response.data.user)
+                //console.log("api.loginUser successful, returns: ", response.data.user)
                 authReducer({
                     type: AuthActionType.LOGIN_USER,
                     payload: {
                         user: response.data.user
                     }
                 })
-                console.log("After reducer is called: ", auth.user, auth.loggedIn)
+                //console.log("After reducer is called: ", auth.user, auth.loggedIn)
                 history.push("/");
                 store.loadIdNamePairs();
             }
@@ -175,7 +175,7 @@ function AuthContextProvider(props) {
         try {
             const response = await api.logoutUser()
             if (response.status === 200) {
-                console.log("cookie cleared, go to reducer")
+                //console.log("cookie cleared, go to reducer")
                 authReducer({
                     type: AuthActionType.LOGOUT_USER,
                     payload: {

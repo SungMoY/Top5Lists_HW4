@@ -57,7 +57,7 @@ function Top5Item(props) {
             if (text === "") {
                 text = "?"
             }
-            console.log("handle key press: ", index, text)
+            //console.log("handle key press: ", index, text)
             store.addUpdateItemTransaction(index, text);
             toggleEdit();
         }
@@ -70,7 +70,7 @@ function Top5Item(props) {
             if (text === "") {
                 text = "?"
             }
-            console.log("handle key press: ", index, text)
+            //console.log("handle key press: ", index, text)
             store.addUpdateItemTransaction(index, text);
             toggleEdit();
     }
@@ -93,7 +93,7 @@ function Top5Item(props) {
         editStatus = true
     }
     //let { index } = props; //declared above
-    console.log("INDEX OF ThIS TOP%ITEM", index)
+    //console.log("INDEX OF ThIS TOP%ITEM", index)
 
     if (editActive) {
         return (
