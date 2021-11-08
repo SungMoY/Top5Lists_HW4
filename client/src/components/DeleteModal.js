@@ -49,16 +49,16 @@ export default function DeleteModal() {
             >
             <Box sx={style} justifyContent="center" alignItems="center" >
 
-                <Alert severity="warning" variant="filled">
+                <Alert severity="warning">
                 <AlertTitle>Warning</AlertTitle>
                         Delete the {name} Top 5 List?
                 </Alert>
 
-                <Stack direction="row" spacing={2} justifyContent = "center" alignItems="center">
-                    <Button onClick={() => handleDeleteList()}>
+                <Stack direction="row" spacing={2} justifyContent = "center" alignItems="center"> 
+                    <Button variant="contained" onClick={() => handleDeleteList()}>
                         Confirm
                     </Button>
-                    <Button onClick={() => handleCloseModal()}>
+                    <Button variant="contained" onClick={() => handleCloseModal()}>
                         Cancel
                     </Button>
                 </Stack>
